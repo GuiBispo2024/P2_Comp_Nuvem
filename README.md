@@ -179,6 +179,16 @@ az webapp show --resource-group MEU_GRUPO --name MEU_APP --query defaultHostName
 
 Referências. [Deploy ZIP](https://learn.microsoft.com/en-us/azure/app-service/deploy-zip) · [Aplicação Node.js no App Service](https://learn.microsoft.com/en-us/azure/app-service/quickstart-nodejs)
 
+## Publicação do frontend na Vercel
+
+Use a raiz do repositório como **Root Directory**. O arquivo `vercel.ts` configura `npm run build` e a saída `frontend/dist`. O Express roda separadamente no App Service, onde o histórico e as migrações em andamento ficam na memória do processo.
+
+1. Publique o backend no App Service e confirme que `/api/health` retorna `{"status":"ok"}`.
+2. Em **Settings → Environment Variables** na Vercel, defina `BACKEND_ORIGIN` como a origem HTTPS do App Service, por exemplo `https://meu-app.azurewebsites.net`. Use apenas o domínio com o protocolo. As credenciais do Google, do Azure e de administrador ficam no App Service.
+3. Faça um novo deploy da Vercel e confirme que `/api/health` responde também pelo domínio do frontend. Sem `BACKEND_ORIGIN`, o deploy serve apenas o painel estático.
+
+Referências. [Configuração programática](https://vercel.com/docs/project-configuration/vercel-ts) · [Rewrites externos](https://vercel.com/docs/routing/rewrites)
+
 ## Versionamento e segredos
 
 Inclua o código-fonte, `package.json`, `package-lock.json`, `.env.example` e este README. Confira os arquivos preparados para envio com `git diff --cached --name-only`. Mantenha o `.env` real, o JSON da conta de serviço e outros segredos fora do commit. O `.gitignore` cobre o `.env` e padrões comuns de credenciais. Guarde arquivos de chave fora da pasta do projeto.
